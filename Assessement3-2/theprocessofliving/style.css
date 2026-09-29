@@ -1,0 +1,380 @@
+/* #future-canvas {
+  width: 640px;
+  height: 640px;
+  margin: 20px auto;
+  position: relative;
+  background: rgb(0, 0, 0);
+  overflow: hidden;
+  border: 1px solid rgb(75, 75, 75);
+} */
+/*hello 
+/*while looking at css stuff i realized that ---color=1234 is correct
+and not color=#1234
+if dashes removed css treats it as invalid says google
+
+test css plus test ugly font import*/
+/*trying variables in css for font, colors etc from source
+EVRYTHING NEW ADDED NOW ON IS FROM SOURCE : THIS IS NOT A BUTTON ok*/
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cinzel+Decorative:wght@400;700&display=swap");
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+/* new roots vars
+   keeping these so js files can still reference --font-mono etc */
+:root {
+  --font-mono: "Share Tech Mono", "Courier New", monospace;
+  --font-title: "Cinzel Decorative", "Georgia", serif;
+  --font-times: "Times New Roman", Georgia, Times, serif;
+  --red: #660000; /* page background red from reference */
+  --red-bright: #ff0000; /* hot link red */
+  --green: #33ff00; /* link green from reference */
+  --orange: #ff9900; /* cell accent from reference */
+  --black: #000000;
+  --white: #ffffff;
+  --grey: #666666;
+  --grey-light: #999999;
+  --grey-pale: #cccccc;
+  --border-thick: 5px solid #cccccc; /* thick table-style border */
+  --border-med: 3px solid #cccccc;
+  --border-cell: 2px solid #33ff00; /* green cell borders */
+}
+
+/* basepage:
+   dark red background, green text, like the reference html body tag:
+   bgcolor="#660000" text="red" link="#33ff00" */
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--red);
+  color: #e90c0c;
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+}
+
+/* hp text links
+   green, no underline by default, underline on hover.
+   clicking them reveals more text — handled by hypertext.js */
+a {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid var(--green);
+  cursor: pointer;
+}
+a:hover {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+  background: rgba(0, 0, 0, 0.3);
+}
+a:visited {
+  color: var(--green);
+}
+
+/* outer bord
+   mimics the <table border="5"> wrapper from the reference
+   this wraps every state's content in a thick bordered cell */
+.border-table {
+  border: var(--border-thick);
+  border-color: var(--grey-pale);
+  /*cellspacing: 3px;*/
+  width: 700px;
+  max-width: 98vw;
+  background: var(--black);
+  margin: 20px auto;
+}
+
+/* a single cell inside the border table like a <td> */
+.border-cell {
+  border: var(--border-med);
+  border-color: var(--grey-pale);
+  padding: 10px;
+  vertical-align: top;
+}
+
+/* colored cell variants matching reference bgcolor attributes */
+.cell-black {
+  background: var(--black);
+  color: var(--green);
+}
+.cell-grey {
+  background: var(--grey);
+  color: var(--white);
+}
+.cell-orange {
+  background: var(--orange);
+  color: var(--black);
+}
+.cell-white {
+  background: var(--white);
+  color: var(--black);
+}
+.cell-red {
+  background: var(--red-bright);
+  color: var(--white);
+}
+
+/* mixed fonts mixed like the reference html used courier + times + arial */
+.font-courier {
+  font-family: "Courier New", Courier, Monaco, monospace;
+  font-size: 13px;
+}
+.font-times {
+  font-family: var(--font-times);
+  font-size: 15px;
+}
+.font-arial {
+  font-family: Arial, Helvetica, Geneva, sans-serif;
+  font-size: 14px;
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+.font-title {
+  font-family: var(--font-title);
+}
+
+/*state container css woild go here as statemanager 
+toggles display none to switch the screens
+like defining a full-screen layout system for each “state” (screen)
+so everything inside .state is perfectly centered in the screen when it comes time */
+.state {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+/* opener css its purely typography and visual styling and will be changed */
+#title-label {
+  font-family: "Cinzel Decorative", "Georgia", serif;
+  font-size: 13px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 1.2rem;
+}
+/*billy ball container to strictly have a “this area is interactive / precise / clickable” defined
+like a wrapper and positioned relative to this container, not the whole page
+target for el <div id="ball-container"></div> 
+ALSO the cross hair effect for the mouse cursoer hover to signal the "this area is interactive" visually */
+#ball-container {
+  position: relative;
+  cursor: crosshair;
+  line-height: 1;
+}
+/* this applies only to a <canvas> inside that container to fix wierd spacing 
+and baseline text alignment issues when i dont want the random text (soon to be added as offshoots to game) to appear on the ball but
+on anywhere else, blcok removes extra bottom spacing and makes this a rectangle */
+#ball-container canvas {
+  display: block;
+}
+/* for the subtext*/
+#hint-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.22);
+  margin-top: 0.1em;
+}
+
+/* FUTURE css*/
+/* sorry justify-content: flex-start pushes things to the top instead of center */
+#future {
+  overflow-y: auto;
+  justify-content: flex-start;
+  padding: 2rem 1rem 4rem;
+}
+#future-stage {
+  position: relative;
+  width: 640px;
+  height: 500px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+#tell-text {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 0.2em;
+  color: #e3e3e3;
+  pointer-events: none;
+  z-index: 10;
+  top: 20px;
+  left: 20px;
+}
+/*deck image edit for tranform later */
+#deck-image {
+  position: absolute;
+  width: 120px;
+  height: 168px;
+  cursor: pointer;
+  display: none;
+  left: 260px;
+  top: 220px;
+  transition: transform 0.15s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+#deck-image:hover {
+  transform: scale(1.04);
+}
+/*flip card CSS : SOURCE : https://www.w3schools.com/howto/howto_css_flip_card.asp
+and the structure in html:
+*/
+/* pos absolute on #future-stage w js the Outer container*/
+.flip-card {
+  position: absolute;
+  width: 120px;
+  height: 168px;
+  display: none; /* hidden until FutureGame shows them */
+  left: 260px; /* start stacked at deck center and the js will move it*/
+  top: 220px;
+  /* perspective gives the 3D depth effect, same as the W3Schools example */
+  perspective: 1000px;
+  cursor: pointer;
+  /*animate with transition left/top when js changes them*/
+  transition:
+    left 0.55s ease,
+    top 0.55s ease;
+}
+/*inner container which is the actual rotation part*/
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /*this transition controls the flip speed */
+  transition: transform 0.7s;
+  /* assuming preserve-3d keeps both faces in 3D space so the back is truly behind */
+  transform-style: preserve-3d;
+}
+/*"is-flipped" class is added by oneforth.js to trigger the flip*/
+.flip-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+/* front and back faces share the same position and size */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* backface-visibility:hidden hides the face that is rotated away*/
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+/*show the back of card pic when f down state*/
+.flip-card-front {
+  background: #0a0a0a;
+}
+.flip-card-back {
+  background: #0a0a0a;
+  transform: rotateY(180deg);
+}
+/* Card images fill their face completely */
+.flip-card-front img,
+.flip-card-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* once a card has been fate-clicked  dim it so the user can see which
+   cards still need to be clicked this added futuregame.rev fate idk */
+.flip-card.fate-read {
+  opacity: 0.4;
+  filter: grayscale(60%);
+  cursor: default;
+}
+/* hover lift while waiting for fate clicks (only on flipped not fate-read) */
+.flip-card-inner.is-flipped:hover {
+  transform: rotateY(180deg) translateY(-6px);
+}
+/* override the lift on a fate-read card but no hover effect after it done */
+.flip-card.fate-read .flip-card-inner.is-flipped:hover {
+  transform: rotateY(180deg);
+}
+/*readings panels and containers (like for the card lines and the story line)*/
+#reading-panel {
+  width: 640px;
+  margin-top: 2rem;
+  font-size: 13px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.6);
+}
+#cards-line {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+#story-line {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 1.2rem;
+}
+#interpretation-line {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+}
+/* hypertext links inside the reading panel 
+   these are the words that open more text when clicked */
+#interpretation-line a,
+#story-line a {
+  color: var(--orange);
+  border-bottom: 1px dotted var(--orange);
+  font-style: normal;
+}
+#interpretation-line a:hover,
+#story-line a:hover {
+  background: var(--orange);
+  color: var(--black);
+}
+/* expansion boxes
+   hidden divs that appear when a hypertext link is clicked
+   styled like a rough table cell appended inline. */
+.hypertext-expand {
+  display: none; /* hidden by default, shown by hypertext.js */
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: 2px solid var(--green);
+  background: var(--red);
+  color: var(--white);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* when expanded, this class is added by hypertext.js */
+.hypertext-expand.open {
+  display: block;
+}
+
+/* links inside expansion boxes lead to further expansions */
+.hypertext-expand a {
+  color: var(--green);
+  border-bottom: 1px solid var(--green);
+}
+
+/* return button */
+.return-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.25);
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 2rem;
+  padding: 8px 16px;
+  transition: color 0.2s;
+}
+.return-btn:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
